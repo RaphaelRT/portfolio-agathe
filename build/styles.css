@@ -65,7 +65,7 @@ body {
 }
 
 /* Responsive design for mobile */
-@media (max-width: 768px) {
+@media (max-width: 950px) {
     .container {
         width: 100%;
         min-width: unset; /* Remove min-width on mobile */
