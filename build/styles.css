@@ -68,6 +68,8 @@ body {
 @media (max-width: 950px) {
     .container {
         width: 100%;
+        padding-left: 2px;
+        padding-right: 2px;
         min-width: unset; /* Remove min-width on mobile */
     }
     .iframe-container {
