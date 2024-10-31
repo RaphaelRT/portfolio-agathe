@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site en construction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f8f8;
+            text-align: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 50px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h1 {
+            font-size: 2.5em;
+            color: #333;
+        }
+        p {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .gif-container {
+            margin-top: 20px;
+        }
+        .gif-container img {
+            max-width: 300px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Site en construction</h1>
+    <p>Nous travaillons actuellement sur le site . Merci de revenir plus tard !</p>
+    <div class="gif-container">
+        <img id="constructionGif" alt="GIF en construction">
+    </div>
+</div>
+
+<script>
+    const apiKey = 'ZifToPW920fZqnH229ppFVv1x6DWI6Qn';  // Remplace par ta clé API Giphy
+    const query = 'cat';  // Requête pour obtenir des GIFs liés à la construction
+    const apiUrl = `https://api.giphy.com/v1/gifs/random?api_key=${apiKey}&tag=${encodeURIComponent(query)}&rating=g`;
+
+    // Faire une requête à l'API Giphy pour obtenir un GIF aléatoire
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            const gifUrl = data.data.images.original.url;
+            document.getElementById('constructionGif').src = gifUrl;
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération du GIF :', error);
+            document.getElementById('constructionGif').alt = 'Erreur lors du chargement du GIF';
+        });
+</script>
+
+</body>
+</html>
