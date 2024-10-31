@@ -1,0 +1,101 @@
+/* Import joly-text font from Adobe Typekit */
+@import url("https://p.typekit.net/p.css?s=1&k=caq3tse&ht=tk&f=53113.53117.53118.53119&a=9509683&app=typekit&e=css");
+
+@font-face {
+    font-family: "joly-text";
+    src: url("https://use.typekit.net/af/857702/0000000000000000774edff6/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff2"),
+         url("https://use.typekit.net/af/857702/0000000000000000774edff6/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("woff"),
+         url("https://use.typekit.net/af/857702/0000000000000000774edff6/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n7&v=3") format("opentype");
+    font-display: auto;
+    font-style: normal;
+    font-weight: 700;
+}
+
+@font-face {
+    font-family: "joly-text";
+    src: url("https://use.typekit.net/af/315875/0000000000000000774edff8/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("woff2"),
+         url("https://use.typekit.net/af/315875/0000000000000000774edff8/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("woff"),
+         url("https://use.typekit.net/af/315875/0000000000000000774edff8/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i4&v=3") format("opentype");
+    font-display: auto;
+    font-style: italic;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "joly-text";
+    src: url("https://use.typekit.net/af/77f34a/0000000000000000774edffb/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff2"),
+         url("https://use.typekit.net/af/77f34a/0000000000000000774edffb/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("woff"),
+         url("https://use.typekit.net/af/77f34a/0000000000000000774edffb/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3") format("opentype");
+    font-display: auto;
+    font-style: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "joly-text";
+    src: url("https://use.typekit.net/af/3e0cae/0000000000000000774edffa/30/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3") format("woff2"),
+         url("https://use.typekit.net/af/3e0cae/0000000000000000774edffa/30/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3") format("woff"),
+         url("https://use.typekit.net/af/3e0cae/0000000000000000774edffa/30/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=i7&v=3") format("opentype");
+    font-display: auto;
+    font-style: italic;
+    font-weight: 700;
+}
+
+/* Global Styles */
+body {
+    font-family: "joly-text", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f8f8f8;
+    text-align: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff;
+    padding: 50px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    min-width: 50%;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        min-width: unset; /* Remove min-width on mobile */
+    }
+    .iframe-container {
+        width: 100%; /* Make iframe container full width on mobile */
+    }
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #333;
+}
+
+p {
+    font-size: 1.2em;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.iframe-container {
+    margin-top: 20px;
+    width: 100%;
+    max-width: 600px;
+    height: 400px;
+}
+
+.iframe-container iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: none;
+}
