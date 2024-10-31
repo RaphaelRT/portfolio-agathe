@@ -13,10 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Build project
-        run: |
-          npm install
-          npm run build  # Assure-toi que la commande de build est correcte
+      #- name: Build project
+      #  run: |
+      #    npm install
+      #    npm run build
 
       - name: Deploy to FTP
         uses: SamKirkland/FTP-Deploy-Action@4.1.0
@@ -24,5 +24,5 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: build  # Dossier local avec les fichiers générés
-          server-dir: /www/main  # Dossier sur le FTP
+          local-dir: build
+          server-dir: /www/main
