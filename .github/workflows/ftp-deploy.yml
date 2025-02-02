@@ -3,7 +3,7 @@ name: Deploy to FTP
 on:
   push:
     branches:
-      - '**'  # Écouter les pushes sur toutes les branches
+      - '**' 
 
 jobs:
   ftp-deploy:
@@ -13,11 +13,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Décommenter si besoin de build
-      #- name: Build project
-      #  run: |
-      #    npm install
-      #    npm run build
+      - name: Build project
+        run: |
+          npm install
+          npm run build:static
 
       - name: Deploy to Staging FTP
         if: github.ref != 'refs/heads/main' || always()
