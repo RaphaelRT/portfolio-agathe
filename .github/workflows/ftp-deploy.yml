@@ -27,6 +27,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: build/
           server-dir: /www/staging/
+          dangerous-clean-slate: true
 
       - name: Deploy to Production FTP
         if: github.ref == 'refs/heads/main'
@@ -37,3 +38,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           local-dir: build/
           server-dir: /www/main/
+          dangerous-clean-slate: true
