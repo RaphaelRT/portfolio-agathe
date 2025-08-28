@@ -63,8 +63,12 @@ const Carousel: React.FC<CarouselProps> = ({ slides}) => {
     const [touchStartX, setTouchStartX] = useState<number | null>(null);
     const [touchDeltaX, setTouchDeltaX] = useState(0);
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const measureRef = useRef<HTMLSpanElement | null>(null);
-    const [shouldSplit, setShouldSplit] = useState(false);
+    const measureRef = useRef<HTMLSpanElement | null>(null); // raw title measurer
+    const measureLine1Ref = useRef<HTMLSpanElement | null>(null);
+    const measureLine2Ref = useRef<HTMLSpanElement | null>(null);
+    const arrowRef = useRef<HTMLButtonElement | null>(null);
+    const [doSplit, setDoSplit] = useState(false);
+    const [titleFontPx, setTitleFontPx] = useState<number>(18);
 
     const handleNext = () => setIdx((prev) => (prev + 1) % items.length);
     const handlePrev = () => setIdx((prev) => (prev - 1 + items.length) % items.length);
@@ -96,18 +100,46 @@ const Carousel: React.FC<CarouselProps> = ({ slides}) => {
     const bracketPos = rawTitle.indexOf('[');
     const line1 = bracketPos > -1 ? rawTitle.slice(0, bracketPos).trim() : rawTitle;
     const line2 = bracketPos > -1 ? rawTitle.slice(bracketPos).trim() : '';
-    const mediaObjectClass = current.isPortrait ? 'object-contain' : 'object-cover';
+    const mediaObjectClass = current.isPortrait ? 'object-contain object-left' : 'object-cover object-center';
 
     useEffect(() => {
       const el = containerRef.current;
-      const measureEl = measureRef.current as HTMLSpanElement | null;
-      if (!el || !measureEl) return;
-      // Set text to measure and ensure no wrap
-      measureEl.textContent = rawTitle;
-      const containerWidth = el.clientWidth;
-      const textWidth = measureEl.offsetWidth;
-      setShouldSplit(bracketPos > -1 && textWidth > containerWidth);
-    }, [rawTitle, idx, bracketPos]);
+      const rawEl = measureRef.current as HTMLSpanElement | null;
+      const l1El = measureLine1Ref.current as HTMLSpanElement | null;
+      const l2El = measureLine2Ref.current as HTMLSpanElement | null;
+      const arrowEl = arrowRef.current as HTMLButtonElement | null;
+      if (!el || !rawEl) return;
+
+      const arrowWidth = arrowEl?.offsetWidth ?? 0;
+      const gapPx = 8; // gap-2
+      const availableWidth = el.clientWidth - arrowWidth - gapPx;
+
+      rawEl.textContent = rawTitle;
+      rawEl.style.fontSize = `${titleFontPx}px`;
+      const rawWidth = rawEl.offsetWidth;
+
+      const needSplit = bracketPos > -1 && rawWidth > availableWidth;
+
+      if (needSplit && l1El && l2El) {
+        l1El.textContent = line1;
+        l2El.textContent = line2;
+
+        // Try to fit both lines on one row each by reducing font size
+        let currentSize = titleFontPx;
+        for (let i = 0; i < 12; i += 1) {
+          l1El.style.fontSize = `${currentSize}px`;
+          l2El.style.fontSize = `${currentSize}px`;
+          const fits = l1El.offsetWidth <= availableWidth && l2El.offsetWidth <= availableWidth;
+          if (fits || currentSize <= 14) {
+            setTitleFontPx(currentSize);
+            break;
+          }
+          currentSize -= 1;
+        }
+      }
+
+      setDoSplit(needSplit);
+    }, [rawTitle, idx, bracketPos, line1, line2, titleFontPx]);
 
     return (
       <div className="mb-6" ref={containerRef}>
@@ -131,13 +163,13 @@ const Carousel: React.FC<CarouselProps> = ({ slides}) => {
               src={current.src}
               alt={current.title}
               fill
-              className={`${mediaObjectClass} object-left`}
+              className={`${mediaObjectClass}`}
             />
           )}
         </div>
         <div className="relative mt-2 flex items-start justify-between gap-2">
-          <p className="text-left leading-tight lg:text-xl font-marist flex-1">
-            {shouldSplit ? (
+          <p className="text-left leading-tight lg:text-xl font-marist flex-1" style={{ fontSize: `${titleFontPx}px` }}>
+            {doSplit ? (
               <>
                 {line1}
                 {line2 ? (<><br/>{line2}</>) : null}
@@ -151,11 +183,14 @@ const Carousel: React.FC<CarouselProps> = ({ slides}) => {
             aria-label="Next slide"
             className="shrink-0"
             onClick={handleNext}
+            ref={arrowRef}
           >
             <span className="font-marist text-2xl leading-none">→</span>
           </button>
           {/* Invisible measurer to detect overflow */}
-          <span ref={measureRef} className="invisible absolute whitespace-nowrap lg:text-xl font-marist">{rawTitle}</span>
+          <span ref={measureRef} className="invisible absolute left-0 top-0 whitespace-nowrap lg:text-xl font-marist">{rawTitle}</span>
+          <span ref={measureLine1Ref} className="invisible absolute left-0 top-0 whitespace-nowrap lg:text-xl font-marist">{line1}</span>
+          <span ref={measureLine2Ref} className="invisible absolute left-0 top-0 whitespace-nowrap lg:text-xl font-marist">{line2}</span>
         </div>
       </div>
     );
