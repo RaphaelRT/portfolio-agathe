@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 interface Slide {
@@ -57,31 +57,115 @@ const Carousel: React.FC<CarouselProps> = ({ slides}) => {
     
   }
 
+  // Mini slider per project for mobile
+  const MiniSlider: React.FC<{ items: { src: string; title: string; isPortrait: boolean }[] }>= ({ items }) => {
+    const [idx, setIdx] = useState(0);
+    const [touchStartX, setTouchStartX] = useState<number | null>(null);
+    const [touchDeltaX, setTouchDeltaX] = useState(0);
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const measureRef = useRef<HTMLSpanElement | null>(null);
+    const [shouldSplit, setShouldSplit] = useState(false);
+
+    const handleNext = () => setIdx((prev) => (prev + 1) % items.length);
+    const handlePrev = () => setIdx((prev) => (prev - 1 + items.length) % items.length);
+
+    const onTouchStart: React.TouchEventHandler<HTMLDivElement> = (e) => {
+      setTouchStartX(e.touches[0].clientX);
+      setTouchDeltaX(0);
+    };
+    const onTouchMove: React.TouchEventHandler<HTMLDivElement> = (e) => {
+      if (touchStartX === null) return;
+      setTouchDeltaX(e.touches[0].clientX - touchStartX);
+    };
+    const onTouchEnd: React.TouchEventHandler<HTMLDivElement> = () => {
+      const threshold = 40; // pixels
+      if (touchDeltaX > threshold) {
+        handlePrev();
+      } else if (touchDeltaX < -threshold) {
+        handleNext();
+      } else {
+        // tap
+        handleNext();
+      }
+      setTouchStartX(null);
+      setTouchDeltaX(0);
+    };
+
+    const current = items[idx];
+    const rawTitle = current.title || '';
+    const bracketPos = rawTitle.indexOf('[');
+    const line1 = bracketPos > -1 ? rawTitle.slice(0, bracketPos).trim() : rawTitle;
+    const line2 = bracketPos > -1 ? rawTitle.slice(bracketPos).trim() : '';
+    const mediaObjectClass = current.isPortrait ? 'object-contain' : 'object-cover';
+
+    useEffect(() => {
+      const el = containerRef.current;
+      const measureEl = measureRef.current as HTMLSpanElement | null;
+      if (!el || !measureEl) return;
+      // Set text to measure and ensure no wrap
+      measureEl.textContent = rawTitle;
+      const containerWidth = el.clientWidth;
+      const textWidth = measureEl.offsetWidth;
+      setShouldSplit(bracketPos > -1 && textWidth > containerWidth);
+    }, [rawTitle, idx, bracketPos]);
+
+    return (
+      <div className="mb-6" ref={containerRef}>
+        <div
+          className={`relative w-full ${current.isPortrait ? 'h-[60vh]' : 'h-[50vh]'} overflow-hidden bg-white flex items-center justify-start select-none`}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
+          {current.src.endsWith('.mp4') ? (
+            <video
+              className={`w-full h-full ${mediaObjectClass} object-left`}
+              controls
+              playsInline
+              preload="metadata"
+            >
+              <source src={current.src} type="video/mp4" />
+            </video>
+          ) : (
+            <Image
+              src={current.src}
+              alt={current.title}
+              fill
+              className={`${mediaObjectClass} object-left`}
+            />
+          )}
+        </div>
+        <div className="relative mt-2 flex items-start justify-between gap-2">
+          <p className="text-left leading-tight lg:text-xl font-marist flex-1">
+            {shouldSplit ? (
+              <>
+                {line1}
+                {line2 ? (<><br/>{line2}</>) : null}
+              </>
+            ) : (
+              <span className="block truncate whitespace-nowrap">{rawTitle}</span>
+            )}
+          </p>
+          <button
+            type="button"
+            aria-label="Next slide"
+            className="shrink-0"
+            onClick={handleNext}
+          >
+            <span className="font-marist text-2xl leading-none">→</span>
+          </button>
+          {/* Invisible measurer to detect overflow */}
+          <span ref={measureRef} className="invisible absolute whitespace-nowrap lg:text-xl font-marist">{rawTitle}</span>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="sm:w-[80%] w-[95%] relative">
       <div className="block sm:hidden pb-7">
         {slides.map((slide, index) => (
-          <div key={index} className="mb-6">
-            {slide.main.src.endsWith(".mp4") ? (
-              <video controls autoPlay className="w-full h-auto">
-                <source src={slide.main.src} type="video/mp4" />
-              </video>
-            ) : (
-              <Image
-                src={slide.main.src}
-                alt={slide.main.title}
-                width={800}
-                height={400}
-                className="object-contain mx-auto"
-                style={{
-                  width: slide.main.isPortrait === true ? '70%' : '100%',
-                  marginLeft: slide.main.isPortrait === true ? '0' : 'auto',
-                  height: 'auto',
-                }}
-              />
-            )}
-            <p className="mt-2 lg:text-xl font-marist ">{slide.main.title}</p>
-          </div>
+          <MiniSlider key={index} items={[slide.main, ...slide.other]} />
         ))}
       </div>
 
@@ -97,7 +181,7 @@ const Carousel: React.FC<CarouselProps> = ({ slides}) => {
               onClick={() => handleNavigation("next")}
             />
             {currentSlide?.src.endsWith(".mp4") ? (
-              <video autoPlay loop controls className="absolute inset-0 w-full h-full object-contain">
+              <video autoPlay loop controls playsInline className="absolute inset-0 w-full h-full object-contain">
                 <source src={currentSlide.src} type="video/mp4" />
               </video>
             ) : currentSlide?.src && currentSlide?.title ? (

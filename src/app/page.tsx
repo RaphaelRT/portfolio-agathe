@@ -19,15 +19,28 @@ export default function Home() {
   useEffect(() => {
     router.prefetch("/work");
 
-    const getRandomImg = () => {
-      const mainImages = slides
-        .map((group) => (!group.main.src.includes("mp4") ? group.main : null))
-        .filter(Boolean)
-        .sort(() => Math.random() - 0.5);
-      return mainImages[0];
+    const getRandomHeadImage = async () => {
+      try {
+        const res = await fetch('/images/head/index.json', { cache: 'no-store' });
+        if (!res.ok) throw new Error('Failed to load /images/head/index.json');
+        const data: { items: string[] } = await res.json();
+        const pool = (data?.items || []).filter((p) => !p.toLowerCase().endsWith('.mp4'));
+        if (pool.length === 0) return null;
+        const idx = Math.floor(Math.random() * pool.length);
+        return { src: pool[idx], title: 'HEAD' };
+      } catch {
+        // fallback to previous logic if index.json not found
+        const mainImages = slides
+          .map((group) => (!group.main.src.includes("mp4") ? group.main : null))
+          .filter(Boolean)
+          .sort(() => Math.random() - 0.5);
+        return mainImages[0] as { src: string; title: string } | null;
+      }
     };
 
-    setMainImage(getRandomImg());
+    getRandomHeadImage().then((img) => {
+      if (img) setMainImage(img);
+    });
 
 
     const fadeTimeout = setTimeout(() => {

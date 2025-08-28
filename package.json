@@ -7,7 +7,10 @@
     "build": "next build",
     "build:static": "rm -rf .next rm -rf /build && cross-env NEXT_PUBLIC_EXPORT_MODE=true next build",
     "start": "rm -rf .next rm -rf /build && cross-env NEXT_PUBLIC_EXPORT_MODE=false next build && next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "images:sanitize": "node scripts/sanitize-images.js",
+    "images:head:index": "node scripts/generate-head-index.js",
+    "images:head:prepare": "npm run images:sanitize && npm run images:head:index"
   },
   "dependencies": {
     "next": "15.1.6",

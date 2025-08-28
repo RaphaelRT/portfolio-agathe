@@ -89,7 +89,7 @@ export default function Footer() {
             >
               FR
             </a>
-            /{" "}
+            /{""}
             <a
               href="/cv/en/Agathe_Minier_CV_2025_EN.pdf"
               className="cursor-pointer underline"

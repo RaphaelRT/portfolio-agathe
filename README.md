@@ -1,36 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Agathe Minier — Portfolio (2025)
+
+A modern, performant portfolio built with Next.js, showcasing the work of designer Agathe Minier with a mobile-first experience and curated media handling.
+
+### Developed by
+
+- Developed by: ROBERT Raphaël  
+  Portfolio: [raphaelrbr.com](https://raphaelrbr.com/)  
+  GitHub: [RaphaelRT](https://github.com/RaphaelRT)  
+  LinkedIn: [raphael-rbrt](https://www.linkedin.com/in/raphael-rbrt/)
+
+### Artist
+
+- Artist: Agathe Minier  
+  Contact: `+33 6 32 31 61 53` — `agatheminier.design@gmail.com`  
+  Socials:  
+  - Instagram: `@ag.type`  
+  - LinkedIn: `Agathe Minier`
+
+## Tech Stack
+
+- Next.js 15 (App Router) + React 19
+- TypeScript, ESLint
+- Tailwind CSS for styling
+- Node.js scripts for media sanitation and indexing
+
+## Features
+
+- Mobile-first mini carousels with touch navigation per project (no arrows on desktop; single next arrow on mobile mini carousels)
+- Smart media handling: images and videos (`playsInline` to avoid auto full-screen on mobile)
+- Automatic filename sanitation for assets in `public/images` (accents removed, spaces to hyphens, lowercase extensions, collision-safe)
+- Optional media index for `public/images/head` used by the homepage to randomly pick a hero image
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20+ (recommended)
+- npm 9+
+
+### Install
+
+```bash
+npm install
+```
+
+### Development
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The project currently uses a custom dev script that performs a build step and then launches the dev server with Turbopack. Visit `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+npm start
+```
 
-## Learn More
+## Media Workflow
 
-To learn more about Next.js, take a look at the following resources:
+### 1) Sanitize image filenames
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The repository includes a sanitizer for all media under `public/images` (recursive):
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run images:sanitize
+```
 
-## Deploy on Vercel
+Rules applied:
+- Remove diacritics/accents
+- Replace spaces/special characters with hyphens
+- Lowercase file extensions
+- Remove trailing dashes before extensions
+- Avoid filename collisions with numerical suffixes
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 2) Homepage head images index (optional)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The homepage can fetch a random image from `public/images/head` via a generated index:
+
+```bash
+npm run images:head:prepare
+# runs: sanitize + generates /public/images/head/index.json
+```
+
+`src/app/page.tsx` will try to load `/images/head/index.json` and pick a random non-video asset; if not available, it falls back to curated slides.
+
+## Project Structure (high level)
+
+- `src/app/` — App Router pages (`page.tsx`, `work/`, `about/`)
+- `src/components/` — UI components (`Carousel`, `Header`, `Footer`)
+- `public/` — Static assets (images, svg, fonts)
+- `scripts/` — Node scripts (`sanitize-images.js`, `generate-head-index.js`)
+
+## Key Technical Decisions
+
+- App Router with Client Components where needed (carousel, interactive sections)
+- Touch-first mini carousels on mobile: per-project isolated sliders, 100% width, portrait vs landscape height control (`60vh` portrait with `object-contain`, `50vh` landscape with `object-cover`)
+- Video playback controlled for mobile: `playsInline` and no autoplay in mini carousels to avoid unexpected full-screen behavior on some devices
+- Sanitized filenames ensure reliable asset URLs and prevent deploy issues on case-sensitive or special-character-sensitive file systems
+
+## Commands Reference
+
+- `npm run dev` — Build then start dev server with Turbopack
+- `npm run build` — Production build
+- `npm start` — Start production server
+- `npm run lint` — Lint the codebase
+- `npm run images:sanitize` — Sanitize all filenames in `public/images`
+- `npm run images:head:prepare` — Sanitize images and generate `/images/head/index.json`
+
+## License
+
+This project is intended as a portfolio site. For reuse or contributions, please contact the developer or the artist.
