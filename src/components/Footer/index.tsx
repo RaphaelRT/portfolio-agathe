@@ -47,7 +47,7 @@ function CopyButton({ text, className, href, ariaLabel }: { text: string; classN
 function FooterSection({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
     <div className={`flex flex-col justify-center ${className || ""}`}>
-      <h2 className="text-base">{title}</h2>
+      <span>{title}</span>
       {children}
     </div>
   );
