@@ -68,7 +68,7 @@ const Carousel: React.FC<CarouselProps> = ({ slides}) => {
     const measureLine3Ref = useRef<HTMLSpanElement | null>(null);
     const arrowRef = useRef<HTMLButtonElement | null>(null);
     const [doSplit, setDoSplit] = useState(false);
-    const [titleFontPx, setTitleFontPx] = useState<number>(18);
+    const [titleFontPx] = useState<number>(18);
     const [allFontSizes, setAllFontSizes] = useState<number[]>(new Array(items.length).fill(18));
     const [globalFontSize, setGlobalFontSize] = useState<number>(18);
     const [imageRatio, setImageRatio] = useState<number>(1);

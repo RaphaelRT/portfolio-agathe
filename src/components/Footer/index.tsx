@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { trackLinkClick } from "@/lib/analytics";
-
+/*
 function CopyButton({ text, className, href, ariaLabel }: { text: string; className?: string; href?: string; ariaLabel?: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -43,6 +42,7 @@ function CopyButton({ text, className, href, ariaLabel }: { text: string; classN
     </button>
   );
 }
+*/
 
 function FooterSection({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
   return (
