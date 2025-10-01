@@ -17,7 +17,7 @@ export default function Home() {
   const [mainImage, setMainImage] = useState<{ src: string; title: string } | null>(null);
 
   useEffect(() => {
-    router.prefetch("/work");
+    //router.prefetch("/work");
 
     const getRandomHeadImage = async () => {
       try {
@@ -42,7 +42,6 @@ export default function Home() {
       if (img) setMainImage(img);
     });
 
-
     const fadeTimeout = setTimeout(() => {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("fromHome", "true");
@@ -53,8 +52,8 @@ export default function Home() {
         return () => clearTimeout(redirectTimeout);
       }
      
-    }, 2000);
-
+    }, 2000); 
+    
     return () => clearTimeout(fadeTimeout);
   }, [router]);
 
@@ -75,7 +74,7 @@ export default function Home() {
           <Image priority className="h-full w-auto" src={homeSection3} alt="&" width={500} height={100}/>
           {mainImage?.src && mainImage?.title && (
             <div
-              className="bg-black w-[30%] mx-[5%] bg-no-repeat bg-contain bg-center"
+              className="bg-black w-[30%] mx-[5%] bg-no-repeat bg-cover bg-center"
               style={{ backgroundImage: `url("${mainImage.src}")` }}
             ></div>
           )}

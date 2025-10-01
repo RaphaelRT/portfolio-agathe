@@ -17,10 +17,10 @@ const buildSrc = (title: string, index?: number, ext: 'jpg' | 'mp4' = 'jpg'): st
 
 export const slides = [
     {
-      main: { src: buildSrc("RAR [Visual identity]", 1), title: "RAR [Visual identity]", isPortrait: false },
+      main: { src: buildSrc("RAR [Visual identity]", 1), title: ".RAR [Visual identity]", isPortrait: false },
       other: [
-        { src: buildSrc("RAR [Visual identity]", 2), title: "RAR [Visual identity]", isPortrait: false },
-        { src: buildSrc("RAR [Visual identity]", 3), title: "RAR [Visual identity]", isPortrait: false },
+        { src: buildSrc("RAR [Visual identity]", 2), title: ".RAR [Visual identity]", isPortrait: false },
+        { src: buildSrc("RAR [Visual identity]", 3), title: ".RAR [Visual identity]", isPortrait: false },
       ],
     },
     {
